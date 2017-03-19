@@ -10,9 +10,7 @@ class connect {
 		$db = "ptm";
 
 		$this->conn = new mysqli($server, $user, $password, $db);
-		$this->test = "hey <br>";
 	}
 }
 
 $connect = new connect();
-// echo $connect->test;

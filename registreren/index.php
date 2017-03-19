@@ -1,3 +1,12 @@
+<?php
+if (isset($_SESSION["access"]) && $_SESSION["access"] === true) {
+	?>
+	<script>
+		window.location = "/";
+	</script>
+	<?php
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>

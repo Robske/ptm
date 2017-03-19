@@ -1,6 +1,10 @@
 <?php
 if (isset($_SESSION["access"]) && $_SESSION["access"] === true) {
-	header("Location: /");
+	?>
+	<script>
+		window.location = "/";
+	</script>
+	<?php
 }
 ?>
 <!DOCTYPE html>
@@ -18,9 +22,7 @@ if (isset($_SESSION["access"]) && $_SESSION["access"] === true) {
 if (isset($_POST["name"]) && isset($_POST["pass"])) {
 	$name = $_POST["name"];
 	$pass = $_POST["pass"];
-
-	require("../include/sql/account.php");
-
+	include("../include/sql/account.php");
 	$users->logon($name, $pass);
 }
 ?>

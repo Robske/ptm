@@ -3,7 +3,15 @@ session_start();
 if (isset($_SESSION["access"]) && isset($_SESSION["username"])) {
 	unset($_SESSION["access"]);
 	unset($_SESSION["username"]);
-	header("Location: /");
+	?>
+	<script>
+		window.location = "/";
+	</script>
+	<?php
 } else {
-	header("Location: /");
+	?>
+	<script>
+		window.location = "/";
+	</script>
+	<?php
 }
