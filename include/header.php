@@ -13,3 +13,4 @@
 <link rel="stylesheet" type="text/css" href="/public/css/base.css">
 <link rel="stylesheet" type="text/css" href="/public/css/navigation.css">
 <link rel="stylesheet" type="text/css" href="/public/css/custom.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
