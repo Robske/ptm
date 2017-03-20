@@ -22,7 +22,7 @@ class users {
 			$now = date('Y-m-d H:i:s');
 			$blockedUntil = $user["blocked_until"];
 
-			if ($loginFails % 3 == 0 && $blockedUntil > $now) {
+			if ($loginFails != 0 && $loginFails % 3 == 0 && $blockedUntil > $now) {
 			// Account blocked
 			?>
 			<div class="fixed container">
@@ -44,7 +44,12 @@ class users {
 
 					$_SESSION["username"] = $username;
 					$_SESSION["access"] = true;
-					header("Location: /");
+
+					?>
+					<script>
+						window.location = "/";
+					</script>
+					<?php
 				} else {
 					$loginFails++;
 					if ($loginFails >= 3) {
