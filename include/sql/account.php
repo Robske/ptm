@@ -11,11 +11,12 @@ class users {
 		$pass = strip_tags($pass);
 		$pass = preg_replace('/\W/', '', $pass);
 
-		$getUser = "SELECT * FROM users WHERE username = '$username' AND inactive = 0";
+		$getUser = "SELECT * FROM users WHERE username = '$username' AND inactive = 0;";
 		$result = $this->conn->query($getUser);
 		$user = mysqli_fetch_assoc($result);
 
 		if (isset($user)) {
+			$name = $user["name"];
 			$username = $user["username"];
 			$hash = $user["password"];
 			$loginFails = $user["login_fails"];
@@ -38,10 +39,11 @@ class users {
 				// Account not blocked
 				if (password_verify($pass, $hash)) {
 					if ($loginFails != NULL) {
-						$update = "UPDATE users SET blocked_until = NULL, login_fails = NULL WHERE username = '$username'";
+						$update = "UPDATE users SET blocked_until = NULL, login_fails = NULL WHERE username = '$username';";
 						$this->conn->query($update);
 					}
 
+					$_SESSION["name"] = $name;
 					$_SESSION["username"] = $username;
 					$_SESSION["access"] = true;
 
@@ -91,34 +93,78 @@ class users {
 	/* End Inloggen */
 
 	/* Registreren */
-	function register($firstname, $lastname, $username, $pass) {
-		$firstname = strip_tags($firstname);
-		$firstname = preg_replace('/\W/', '', $firstname);
-		$lastname = strip_tags($lastname);
-		$lastname = preg_replace('/\W/', '', $lastname);
+	function register($name, $username, $pass) {
+		
+		$name = strip_tags($name);
+		$name = preg_replace('/\W/', '', $name);
+
 		$username = strip_tags($username);
-		$username = preg_replace('/\W/', '', $username);
+		$usernameSpaces = substr_count($username, ' ');
+		$username = preg_replace('/\W\s/', '', $username);
+
 		$pass = strip_tags($pass);
+		$passSpaces = substr_count($pass, ' ');
 		$pass = preg_replace('/\W\s/', '', $pass);
 
-		//Als naam kleiner is zonder quotes en tekens is melding
-
-		/* Check of naam bestaat */
-		$checkName = "SELECT * FROM users WHERE username = '$username';";
-		$result = $this->conn->query($checkName);
-		if (mysql_num_rows($result) == 1) {
+		if (strlen($name) < 2 || 
+			$usernameSpaces >= 1 || strlen($username) < 6 ||
+			$passSpaces >= 1 || strlen($pass) < 9) {
 			?>
 			<div class="fixed container">
 				<div class="col-xs-12 col-md-6 col-md-offset-3">
-					<div class="alert alert-warning text-center">
-						<strong>Naam is in gebruik</strong>
+					<div class="alert alert-danger text-center">
+						<strong>Vul alle gegevens correct in!</strong>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+				</div>
+			</div>
+			<?php
+			global $failedToRegister;
+			return $failedToRegister = true;
+		}
+
+		/* Check of naam bestaat */
+		$checkName = "SELECT username FROM users WHERE username = '$username' AND inactive = 0;";
+		$result = $this->conn->query($checkName);
+		$user = mysqli_fetch_assoc($result);
+		
+		if (isset($user)) {
+			?>
+			<div class="fixed container">
+				<div class="col-xs-12 col-md-6 col-md-offset-3">
+					<div class="alert alert-danger text-center">
+						<strong>Gebruikersnaam <?php echo $username; ?> is in gebruik</strong>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
 					</div>
 				</div>
 			</div>
 			<?php
 		} else {
-
+			$password = password_hash($pass, PASSWORD_BCRYPT, ["cost" => 10]);
+			$createUser = "INSERT INTO users (name, username, password) VALUES ('$name', '$username', '$password');";
+			if ($this->conn->query($createUser)) {
+				?>
+				<div class="fixed container">
+					<div class="col-xs-12 col-md-6 col-md-offset-3">
+						<div class="alert alert-success text-center">
+							<strong>Account aangemaakt</strong> Je kunt nu inloggen
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+					</div>
+				</div>
+				<?php
+			} else {
+				?>
+				<div class="fixed container">
+					<div class="col-xs-12 col-md-6 col-md-offset-3">
+						<div class="alert alert-danger text-center">
+							<strong>Registreren mislukt</strong>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
 		}
 	}
 	/* End Registreren */
