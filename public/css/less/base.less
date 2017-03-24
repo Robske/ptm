@@ -42,34 +42,9 @@ h1, h2, h3 {
 /* Form */
 form {
 	.form-group {
-		label {
-			span {
-				color: red;
-			}
-			
-			color: #343454;
-			font-size: 16px;
-			margin-top: 10px;
-		}
-
 		label:first-child {
 			margin-top: 5px;
 		}
-	}
-
-	input.form-control {
-		color: #fff;
-		background-color: #8A8A9E;
-
-		-webkit-transition: background-color .5s ease;
-		-moz-transition: background-color .5s ease;
-		-o-transition: background-color .5s ease;
-		transition: background-color .5s ease;
-	}
-	
-	input.form-control:hover, input.form-control:focus {
-		color: #555;
-		background-color: #fff;
 	}
 
 	.btn-login {
@@ -85,6 +60,23 @@ form {
 	}
 }
 /* End Form */
+
+/* Input */
+input.form-control {
+	color: #fff !important;
+	background-color: #8A8A9E !important;
+
+	-webkit-transition: background-color .5s ease, color .5s ease;
+	-moz-transition: background-color .5s ease, color .5s ease;
+	-o-transition: background-color .5s ease, color .5s ease;
+	transition: background-color .5s ease, color .5s ease;
+}
+
+input.form-control:hover, input.form-control:focus {
+	color: #555 !important;
+	background-color: #fff !important;
+}
+/* End input */
 
 /* hr */
 .hr {
@@ -114,3 +106,15 @@ hr {
 	transition: border-top-color .5s ease, width .3s;
 }
 /* End hr */
+
+/* Label */
+label {
+	span {
+		color: red;
+	}
+	
+	color: #343454;
+	font-size: 16px;
+	margin-top: 10px;
+}
+/* End label */

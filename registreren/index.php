@@ -28,8 +28,16 @@ if (isset($_POST["name"]) && isset($_POST["username"]) && isset($_POST["pass"]))
 
 	require("../include/sql/account.php");
 	$users->register($name, $username, $pass);
-} 
-elseif (isset($_POST["name"]) || isset($_POST["username"]) || isset($_POST["pass"])) {
+	if ($register === true) {
+		?>
+		<script>
+			setTimeout(function() {
+				window.location = "/inloggen";
+			}, 5000);
+		</script>
+		<?php
+	}
+} elseif (isset($_POST["name"]) || isset($_POST["username"]) || isset($_POST["pass"])) {
 	$failedToRegister = true;
 	?>
 	<div class="fixed container">

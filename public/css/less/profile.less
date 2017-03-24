@@ -1,0 +1,70 @@
+.profile {
+	text-align: center;
+	border: 2px solid;
+	border-color:  #343454;
+	border-radius: 10px;
+	margin: 0 10px;
+	padding-bottom: 10px;
+	-webkit-transition: border-color .5s ease;
+	-moz-transition: border-color .5s ease;
+	-o-transition: border-color .5s ease;
+	transition: border-color .5s ease;
+
+	.edit {
+		color: #65657C;
+		margin-top: 15px;
+		font-weight: 600;
+		font-size: 16px;
+	}
+
+	.edit:hover, .edit:focus {
+		text-decoration: none;
+		color: #65657C;
+	}
+
+	.remove {
+		color: darkred;
+		margin-top: 20px;
+		font-weight: 600;
+		font-size: 16px;
+	}
+
+	.remove:hover, .remove:focus {
+		color: darkred;
+		text-decoration: none;
+	}
+
+	.pic {
+		margin-top: 20px;
+		max-height: 190px;
+		border: 2px solid #343454;
+		border-radius: 10px;
+	}
+
+	textarea {
+		color: #fff;
+		background-color: #8A8A9E !important;
+		max-width: 100%;
+
+		-webkit-transition: background-color .5s ease, color .5s ease;
+		-moz-transition: background-color .5s ease, color .5s ease;
+		-o-transition: background-color .5s ease, color .5s ease;
+		transition: background-color .5s ease, color .5s ease;
+	}
+	
+	textarea:hover, textarea:focus {
+		color: #555;
+		background-color: #fff !important;
+	}
+}
+
+.profile:hover {
+	border-color: #8A8A9E;
+}
+
+@media (min-width: 768px) {
+	.profile {
+		margin-left: auto;
+		margin-right: auto;
+	}	
+}

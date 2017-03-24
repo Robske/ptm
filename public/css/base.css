@@ -1,1 +1,97 @@
-body{background-color:#00000F;margin-top:55px}h1{font-size:44px;color:#65657C;text-shadow:3px 3px 5px #343454;-webkit-transition:color .5s ease;-moz-transition:color .5s ease;-o-transition:color .5s ease;transition:color .5s ease}h1:hover,h2{color:#8A8A9E}h4{color:#343454}h3 strong,h4 strong{color:#65657C}h1,h2,h3{margin-top:0}form .form-group label{color:#343454;font-size:16px;margin-top:10px}form .form-group label span{color:red}form .form-group label:first-child{margin-top:5px}form input.form-control{color:#fff;background-color:#8A8A9E;-webkit-transition:background-color .5s ease;-moz-transition:background-color .5s ease;-o-transition:background-color .5s ease;transition:background-color .5s ease}form input.form-control:focus,form input.form-control:hover{color:#555;background-color:#fff}form .btn-login{margin-top:10px;font-weight:600;color:#8A8A9E;background-color:#343454}form .btn-login:active,form .btn-login:focus,form .btn-login:hover{color:#343454;background-color:#8A8A9E}.hr{height:40px;-webkit-transition:width .3s;-moz-transition:width .3s;-o-transition:width .3s;transition:width .3s}.hr:hover hr{width:35%;border-top-color:#fff}hr{border-top-color:#8A8A9E;width:100%;margin-top:20px;-webkit-transition:border-top-color .5s ease,width .3s;-moz-transition:border-top-color .5s ease,width .3s;-o-transition:border-top-color .5s ease,width .3s;transition:border-top-color .5s ease,width .3s}
+body {
+  background-color: #00000F;
+  margin-top: 55px;
+}
+/* Header */
+h1 {
+  font-size: 44px;
+  color: #65657C;
+  margin-top: 0;
+  text-shadow: 3px 3px 5px #343454;
+  -webkit-transition: color .5s ease;
+  -moz-transition: color .5s ease;
+  -o-transition: color .5s ease;
+  transition: color .5s ease;
+}
+h1:hover {
+  color: #8A8A9E;
+}
+h2 {
+  color: #8A8A9E;
+}
+h4 {
+  color: #343454;
+}
+h3 strong,
+h4 strong {
+  color: #65657C;
+}
+h1,
+h2,
+h3 {
+  margin-top: 0;
+}
+/* End Headers */
+/* Form */
+form .form-group label:first-child {
+  margin-top: 5px;
+}
+form .btn-login {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #8A8A9E;
+  background-color: #343454;
+}
+form .btn-login:hover,
+form .btn-login:focus,
+form .btn-login:active {
+  color: #343454;
+  background-color: #8A8A9E;
+}
+/* End Form */
+/* Input */
+input.form-control {
+  color: #fff !important;
+  background-color: #8A8A9E !important;
+  -webkit-transition: background-color 0.5s ease, color 0.5s ease;
+  -moz-transition: background-color 0.5s ease, color 0.5s ease;
+  -o-transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+input.form-control:hover,
+input.form-control:focus {
+  color: #555 !important;
+  background-color: #fff !important;
+}
+/* End input */
+/* hr */
+.hr {
+  height: 40px;
+  -webkit-transition: width .3s;
+  -moz-transition: width .3s;
+  -o-transition: width .3s;
+  transition: width .3s;
+}
+.hr:hover hr {
+  width: 35%;
+  border-top-color: #fff;
+}
+hr {
+  border-top-color: #8A8A9E;
+  width: 100%;
+  margin-top: 20px;
+  -webkit-transition: border-top-color 0.5s ease, width 0.3s;
+  -moz-transition: border-top-color 0.5s ease, width 0.3s;
+  -o-transition: border-top-color 0.5s ease, width 0.3s;
+  transition: border-top-color 0.5s ease, width 0.3s;
+}
+/* End hr */
+/* Label */
+label {
+  color: #343454;
+  font-size: 16px;
+  margin-top: 10px;
+}
+label span {
+  color: red;
+}

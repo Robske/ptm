@@ -3,27 +3,95 @@ class users {
 	function __construct($conn) {
 		$this->conn = $conn;
 	}
+		/* Registreren */
+	function register($name, $username, $pass) {
+		$usernameSpaces = substr_count($username, " ");
+		$passSpaces = substr_count($pass, " ");
+
+		if (strlen($name) < 2 || 
+			$usernameSpaces >= 1 || strlen($username) < 6 ||
+			$passSpaces >= 1 || strlen($pass) < 9) {
+			?>
+			<div class="fixed container">
+				<div class="col-xs-12 col-md-6 col-md-offset-3">
+					<div class="alert alert-danger text-center">
+						<strong>Vul alle gegevens correct in!</strong>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+				</div>
+			</div>
+			<?php
+			global $failedToRegister;
+			return $failedToRegister = true;
+		}
+
+		/* Check of naam bestaat */
+		$checkName = $this->conn->prepare("SELECT username FROM users WHERE username = ? AND inactive = 0");
+		$checkName->bind_param("s", $username);
+		$checkName->execute();
+		$checkName->bind_result($user);
+		$checkName->fetch();
+		$checkName->close();
+
+		if (isset($user)) {
+			?>
+			<div class="fixed container">
+				<div class="col-xs-12 col-md-6 col-md-offset-3">
+					<div class="alert alert-danger text-center">
+						<strong>Gebruikersnaam <?php echo $username; ?> is in gebruik</strong>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+				</div>
+			</div>
+			<?php
+		} else {
+			$password = password_hash($pass, PASSWORD_BCRYPT, ["cost" => 10]);
+			$createUser = $this->conn->prepare("INSERT INTO users (name, username, password) VALUES (?, ?, ?)");
+			$createUser->bind_param("sss", $name, $username, $password);
+
+			if ($createUser->execute()) {
+				?>
+				<div class="fixed container">
+					<div class="col-xs-12 col-md-6 col-md-offset-3">
+						<div class="alert alert-success text-center">
+							<strong>Account aangemaakt</strong> Je kunt nu inloggen
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+					</div>
+				</div>
+				<?php
+				global $register;
+				return $register = true;
+			} else {
+				?>
+				<div class="fixed container">
+					<div class="col-xs-12 col-md-6 col-md-offset-3">
+						<div class="alert alert-danger text-center">
+							<strong>Registreren mislukt</strong>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
+			
+			$createUser->close();
+		}
+	}
+	/* End Registreren */
 
 	/* Inloggen */
 	function logon($username, $pass) {
-		$username = strip_tags($username);
-		$username = preg_replace('/\W/', '', $username);
-		$pass = strip_tags($pass);
-		$pass = preg_replace('/\W/', '', $pass);
+		$getUser = $this->conn->prepare("SELECT id, name, username, password, blocked_until, login_fails FROM users WHERE username = ? AND inactive = 0;");
+		$getUser->bind_param("s", $username);
+		$getUser->execute();
+		$getUser->bind_result($id, $name, $username, $hash, $blockedUntil, $loginFails);
+		$getUser->fetch();
+		$getUser->close();
 
-		$getUser = "SELECT * FROM users WHERE username = '$username' AND inactive = 0;";
-		$result = $this->conn->query($getUser);
-		$user = mysqli_fetch_assoc($result);
-
-		if (isset($user)) {
-			$name = $user["name"];
-			$username = $user["username"];
-			$hash = $user["password"];
-			$loginFails = $user["login_fails"];
-			$now = date('Y-m-d H:i:s');
-			$blockedUntil = $user["blocked_until"];
-
-			if ($loginFails != 0 && $loginFails % 3 == 0 && $blockedUntil > $now) {
+		if (isset($id)) {
+			$now = date("Y-m-d H:i:s");
+			if ($loginFails != NULL && $loginFails % 3 == 0 && $blockedUntil > $now) {
 			// Account blocked
 			?>
 			<div class="fixed container">
@@ -39,12 +107,16 @@ class users {
 				// Account not blocked
 				if (password_verify($pass, $hash)) {
 					if ($loginFails != NULL) {
-						$update = "UPDATE users SET blocked_until = NULL, login_fails = NULL WHERE username = '$username';";
-						$this->conn->query($update);
+						$updateFails = $this->conn->prepare("UPDATE users SET blocked_until = NULL, login_fails = NULL WHERE username = ?");
+						$updateFails->bind_param("s", $username);
+						$updateFails->execute();
+						$updateFails->close();
 					}
 
-					$_SESSION["name"] = $name;
-					$_SESSION["username"] = $username;
+					// Set access and userinfo
+					$_SESSION["id"] = $id;
+					$_SESSION["name"] = htmlspecialchars($name);
+					$_SESSION["username"] = htmlspecialchars($username);
 					$_SESSION["access"] = true;
 
 					?>
@@ -57,12 +129,21 @@ class users {
 					if ($loginFails >= 3) {
 						$now = strtotime($now);
 						$now = $now + (5*60);
-						$blockedUntil = date("Y-m-d H:i:s", $now);
-						$update = "UPDATE users SET blocked_until = '$blockedUntil' WHERE username = '$username'";
-						$this->conn->query($update);
+						$blockedUntil = date('Y-m-d H:i:s', $now);
+						$updateAccount = $this->conn->prepare("
+							UPDATE users SET blocked_until = '$blockedUntil', login_fails = '$loginFails' WHERE username = ?
+							");
+						$updateAccount->bind_param("s", $username);
+						$updateAccount->execute();
+						$updateAccount->close();
+					} else {
+						$updateAccount = $this->conn->prepare("
+							UPDATE users SET login_fails = $loginFails WHERE username = ?
+							");
+						$updateAccount->bind_param("s", $username);
+						$updateAccount->execute();
+						$updateAccount->close();
 					}
-					$update = "UPDATE users SET login_fails = $loginFails WHERE username = '$username'";
-					$this->conn->query($update);
 					?>
 					<div class="fixed container">
 						<div class="col-xs-12 col-md-6 col-md-offset-3">
@@ -87,87 +168,35 @@ class users {
 			</div>
 			<?php
 		}
-		$now = new DateTime('now');
-		$now = date_format($now, 'Y-m-d H:i:s');
 	}
 	/* End Inloggen */
 
-	/* Registreren */
-	function register($name, $username, $pass) {
+	/* Ophalen profiel */
+	function getProfile($id) {
 		
-		$name = strip_tags($name);
-		$name = preg_replace('/\W/', '', $name);
+		$getProfile = $this->conn->prepare("SELECT pic, lives_in, bio, birth FROM profile WHERE account_id = ?");
+		$getProfile->bind_param("s", $id);
+		$getProfile->execute();
+		$getProfile->bind_result($pic, $livesIn, $bio, $birth);
+		$getProfile->fetch();
+		$getProfile->close();
 
-		$username = strip_tags($username);
-		$usernameSpaces = substr_count($username, ' ');
-		$username = preg_replace('/\W\s/', '', $username);
+		$profile = array("pic" => $pic, "livesIn" => $livesIn, "bio" => $bio, "birth" => $birth);
 
-		$pass = strip_tags($pass);
-		$passSpaces = substr_count($pass, ' ');
-		$pass = preg_replace('/\W\s/', '', $pass);
-
-		if (strlen($name) < 2 || 
-			$usernameSpaces >= 1 || strlen($username) < 6 ||
-			$passSpaces >= 1 || strlen($pass) < 9) {
+		if ($profile["livesIn"] == "" || $profile["bio"] == "" || $profile["birth"] == "") {
 			?>
-			<div class="fixed container">
-				<div class="col-xs-12 col-md-6 col-md-offset-3">
-					<div class="alert alert-danger text-center">
-						<strong>Vul alle gegevens correct in!</strong>
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+			<div class="container">
+				<div class="col-xs-12">
+					<div class="text-center error">
+						Profielgegevens niet compleet, maak je profiel compleet voordat je verder gaat.
 					</div>
 				</div>
 			</div>
 			<?php
-			global $failedToRegister;
-			return $failedToRegister = true;
 		}
-
-		/* Check of naam bestaat */
-		$checkName = "SELECT username FROM users WHERE username = '$username' AND inactive = 0;";
-		$result = $this->conn->query($checkName);
-		$user = mysqli_fetch_assoc($result);
-		
-		if (isset($user)) {
-			?>
-			<div class="fixed container">
-				<div class="col-xs-12 col-md-6 col-md-offset-3">
-					<div class="alert alert-danger text-center">
-						<strong>Gebruikersnaam <?php echo $username; ?> is in gebruik</strong>
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-					</div>
-				</div>
-			</div>
-			<?php
-		} else {
-			$password = password_hash($pass, PASSWORD_BCRYPT, ["cost" => 10]);
-			$createUser = "INSERT INTO users (name, username, password) VALUES ('$name', '$username', '$password');";
-			if ($this->conn->query($createUser)) {
-				?>
-				<div class="fixed container">
-					<div class="col-xs-12 col-md-6 col-md-offset-3">
-						<div class="alert alert-success text-center">
-							<strong>Account aangemaakt</strong> Je kunt nu inloggen
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-					</div>
-				</div>
-				<?php
-			} else {
-				?>
-				<div class="fixed container">
-					<div class="col-xs-12 col-md-6 col-md-offset-3">
-						<div class="alert alert-danger text-center">
-							<strong>Registreren mislukt</strong>
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-					</div>
-				</div>
-				<?php
-			}
-		}
+		return $profile;
 	}
-	/* End Registreren */
+	/* End ophalen profiel */
 }
 
 $users = new users($connect->conn);

@@ -7,9 +7,10 @@
   ga('create', 'UA-88028194-1', 'auto');
   ga('send', 'pageview');
 </script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Standard stylesheets -->
 <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/public/css/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="/public/css/base.css">
 <link rel="stylesheet" type="text/css" href="/public/css/navigation.css">
 <link rel="stylesheet" type="text/css" href="/public/css/custom.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">

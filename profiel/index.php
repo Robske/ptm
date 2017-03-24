@@ -1,46 +1,83 @@
-<?php session_start(); ?>
+<?php 
+session_start(); 
+if (!isset($_SESSION["access"]) || $_SESSION["access"] !== true) {
+	?>
+	<script>
+		window.location = "/";
+	</script>
+	<?php
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
 
 <title>PTM | Profiel</title>
 <?php require("../include/header.php"); ?>
+<link rel="stylesheet" type="text/css" href="/public/css/profile.css">
 
 </head>
 <body>
 <?php require("../include/navigation.php"); ?>
 
 <?php require("../include/htmlheader.php"); ?>
-<!-- Profiel gegevens ophalen -->
-<?php
+<?php require("../include/sql/connect.php"); ?>
 
-$avatar = "../favicon.ico";
-$username = "Test gebruiker";
-$birthdate = 1996-11-11;
-$location = "Test locatie";
-$bio = "Test bio";
+<?php 
+if (isset($_SESSION["id"])) {
+
+	require("../include/sql/account.php");
+	$profile = $users->getProfile($_SESSION["id"]);
+	
+	$pic = $profile["pic"];
+	if ($pic == NULL) {
+		$pic = "/public/images/profilepic.jpg";
+	}
+	$name = $_SESSION["name"];
+	$birth = $profile["birth"];
+	$location = $profile["livesIn"];
+	$bio = $profile["bio"];
+} else {
+	?>
+	<script>
+		window.location = "/";
+	</script>
+	<?php
+}
 ?>
-
 <!-- Profiel gegevens showen -->
-<div class="container">
+<div class="container profile">
 	<div class="row">
-		<div class="col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3">
-			<div class="col-md-6">
-				<img class="col-md-6 profile-avatar" src="<?php echo $avatar; ?>" alt="<?php echo $username; ?>" />
-			</div>
-			<div class="col-md-6">
-				<label for="username">Naam</label>
-				<input type="text" class="form-control text-center" name="username" id="username" minlength="2" maxlength="25" value="<?php echo $username; ?>" readonly="true">
-				<label for="username">Geboortedatum</label>
-				<input type="date" class="form-control text-center" name="birthdate" id="birthdate" minlength="2" maxlength="25" value="<?php echo $birthdate; ?>" readonly="true">
-				<label for="username">Locatie</label>
-				<input type="text" class="form-control text-center" name="location" id="location" minlength="2" maxlength="25" value="<?php echo $location; ?>" readonly="true">
-			</div>
+		<div class="col-xs-6 col-sm-4 col-md-3">
+			<a href="/profielwijzigen" class="edit text-left block"><span class="glyphicon glyphicon-pencil"></span> Profiel bewerken</a>
 		</div>
-		<div class="col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3">
-			<label for="username">Bio</label>
-			<textarea class="form-control text-center" name="bio" id="bio" minlength="2" maxlength="25" readonly="true"><?php echo $bio; ?></textarea>
-		</div>>
+		<div class="col-xs-6 col-sm-8 col-md-9">
+			<label class="text-right lightblue block"><?php echo $_SESSION["username"]; ?></label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6 col-sm-4">
+			<img class="img-responsive center-block pic" src="<?php echo $pic; ?>" alt="Profiel foto" />
+		</div>
+		<div class="col-xs-6 col-sm-8">
+			<label for="name" class="margin-top-0">Naam</label>
+			<input type="text" class="form-control text-center" id="name" value="<?php echo $name; ?>" readonly>
+			<label for="birth">Geboortedatum</label>
+			<input type="text" class="form-control text-center" id="birth" value="<?php echo $birth; ?>" readonly>
+			<label for="location">Locatie</label>
+			<input type="text" class="form-control text-center" id="location" value="<?php echo $location; ?>" readonly>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<label for="bio">Bio</label>
+			<textarea class="form-control text-center" id="bio" readonly><?php echo $bio; ?></textarea>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<a href="/accountverwijderen" class="remove text-left block"><span class="glyphicon glyphicon-pencil"></span> Verwijder account</a>
+		</div>
 	</div>
 </div>
 <?php require("../include/footer.php"); ?>
