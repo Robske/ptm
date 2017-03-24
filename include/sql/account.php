@@ -1,9 +1,10 @@
 <?php
-class users {
+class account {
 	function __construct($conn) {
 		$this->conn = $conn;
 	}
-		/* Registreren */
+
+	/* Registreren */
 	function register($name, $username, $pass) {
 		$usernameSpaces = substr_count($username, " ");
 		$passSpaces = substr_count($pass, " ");
@@ -47,7 +48,7 @@ class users {
 		} else {
 			$password = password_hash($pass, PASSWORD_BCRYPT, ["cost" => 10]);
 			$createUser = $this->conn->prepare("INSERT INTO users (name, username, password) VALUES (?, ?, ?)");
-			$createUser->bind_param("sss", $name, $username, $password);
+			$createUser->bind_param("sss", ucwords($name), $username, $password);
 
 			if ($createUser->execute()) {
 				?>
@@ -183,20 +184,9 @@ class users {
 
 		$profile = array("pic" => $pic, "livesIn" => $livesIn, "bio" => $bio, "birth" => $birth);
 
-		if ($profile["livesIn"] == "" || $profile["bio"] == "" || $profile["birth"] == "") {
-			?>
-			<div class="container">
-				<div class="col-xs-12">
-					<div class="text-center error">
-						Profielgegevens niet compleet, maak je profiel compleet voordat je verder gaat.
-					</div>
-				</div>
-			</div>
-			<?php
-		}
 		return $profile;
 	}
 	/* End ophalen profiel */
 }
 
-$users = new users($connect->conn);
+$account = new account($connect->conn);

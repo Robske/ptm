@@ -13,12 +13,12 @@ if (isset($_SESSION["access"]) && $_SESSION["access"] === true) {
 <head>
 
 <title>PTM | Inloggen</title>
-<?php require("../include/header.php"); ?>
+<?php require("../../include/header.php"); ?>
 
 </head>
 <body>
-<?php require("../include/navigation.php"); ?>
-<?php require("../include/sql/connect.php"); ?>
+<?php require("../../include/navigation.php"); ?>
+<?php require("../../include/sql/connect.php"); ?>
 <?php
 // Call register function if values are set
 if (isset($_POST["name"]) && isset($_POST["username"]) && isset($_POST["pass"])) {
@@ -26,13 +26,13 @@ if (isset($_POST["name"]) && isset($_POST["username"]) && isset($_POST["pass"]))
 	$username = $_POST["username"];
 	$pass = $_POST["pass"];
 
-	require("../include/sql/account.php");
-	$users->register($name, $username, $pass);
+	require("../../include/sql/account.php");
+	$account->register($name, $username, $pass);
 	if ($register === true) {
 		?>
 		<script>
 			setTimeout(function() {
-				window.location = "/inloggen";
+				window.location = "/account/inloggen";
 			}, 5000);
 		</script>
 		<?php
@@ -52,7 +52,7 @@ if (isset($_POST["name"]) && isset($_POST["username"]) && isset($_POST["pass"]))
 } 
 ?>
 
-<?php require("../include/htmlheader.php"); ?>
+<?php require("../../include/htmlheader.php"); ?>
 
 <!-- Login form -->
 <div class="container">
@@ -83,8 +83,8 @@ if (isset($_POST["name"]) && isset($_POST["username"]) && isset($_POST["pass"]))
 	</div
 </div>
 
-<?php require("../include/footer.php"); ?>
+<?php require("../../include/footer.php"); ?>
 
-<?php require("../include/user/password_check.php"); ?>
+<?php require("../../include/user/password_check.php"); ?>
 </body>
 </html>

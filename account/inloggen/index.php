@@ -13,22 +13,22 @@ if (isset($_SESSION["access"]) && $_SESSION["access"] === true) {
 <head>
 
 <title>PTM | Inloggen</title>
-<?php require("../include/header.php"); ?>
+<?php require("../../include/header.php"); ?>
 
 </head>
 <body>
-<?php require("../include/navigation.php"); ?>
-<?php require("../include/sql/connect.php"); ?>
+<?php require("../../include/navigation.php"); ?>
+<?php require("../../include/sql/connect.php"); ?>
 <?php
 if (isset($_POST["name"]) && isset($_POST["pass"])) {
 	$name = $_POST["name"];
 	$pass = $_POST["pass"];
-	include("../include/sql/account.php");
-	$users->logon($name, $pass);
+	include("../../include/sql/account.php");
+	$account->logon($name, $pass);
 }
 ?>
 
-<?php require("../include/htmlheader.php"); ?>
+<?php require("../../include/htmlheader.php"); ?>
 
 <!-- Login form -->
 <div class="container">
@@ -48,6 +48,6 @@ if (isset($_POST["name"]) && isset($_POST["pass"])) {
 	</div>
 </div>
 
-<?php require("../include/footer.php"); ?>
+<?php require("../../include/footer.php"); ?>
 </body>
 </html>

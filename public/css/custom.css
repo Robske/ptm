@@ -13,6 +13,9 @@
 .lightblue {
   color: #65657C;
 }
+.underline {
+  text-decoration: underline;
+}
 .fixed {
   position: fixed;
   width: 100%;

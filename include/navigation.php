@@ -25,15 +25,16 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="/profiel">Profiel</a></li>
-							<li><a href="/instellingen">Instellingen</a></li>
+							<li><a href="/profiel/bewerken">Profiel bewerken</a></li>
+							<li><a href="/profiel/instellingen">Instellingen</a></li>
 						</ul>
 					</li>
-      				<li><a href="/uitloggen">Uitloggen</a></li>
+      				<li><a href="/account/uitloggen">Uitloggen</a></li>
 					<?php
 				} else {
 					?>
-					<li><a href="/inloggen">Inloggen</a></li>
-					<li><a href="/registreren">Registreren</a></li>
+					<li><a href="/account/inloggen">Inloggen</a></li>
+					<li><a href="/account/registreren">Registreren</a></li>
 					<?php
 				}
 				?>
