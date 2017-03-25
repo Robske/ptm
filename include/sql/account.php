@@ -45,6 +45,7 @@ class account {
 				</div>
 			</div>
 			<?php
+			return;
 		} else {
 			$password = password_hash($pass, PASSWORD_BCRYPT, ["cost" => 10]);
 			$createUser = $this->conn->prepare("INSERT INTO users (name, username, password) VALUES (?, ?, ?)");
@@ -75,8 +76,9 @@ class account {
 				</div>
 				<?php
 			}
-			
+
 			$createUser->close();
+			return;
 		}
 	}
 	/* End Registreren */
@@ -127,7 +129,7 @@ class account {
 					<?php
 				} else {
 					$loginFails++;
-					if ($loginFails >= 3) {
+					if ($loginFails % 3 == 0) {
 						$now = strtotime($now);
 						$now = $now + (5*60);
 						$blockedUntil = date('Y-m-d H:i:s', $now);
@@ -157,6 +159,7 @@ class account {
 					<?php
 				}
 			}
+			return;
 		} else {
 			?>
 			<div class="fixed container">
@@ -168,6 +171,7 @@ class account {
 				</div>
 			</div>
 			<?php
+			return;
 		}
 	}
 	/* End Inloggen */
@@ -176,7 +180,7 @@ class account {
 	function getProfile($id) {
 		
 		$getProfile = $this->conn->prepare("SELECT pic, lives_in, bio, birth FROM profile WHERE account_id = ?");
-		$getProfile->bind_param("s", $id);
+		$getProfile->bind_param("i", $id);
 		$getProfile->execute();
 		$getProfile->bind_result($pic, $livesIn, $bio, $birth);
 		$getProfile->fetch();
@@ -187,6 +191,16 @@ class account {
 		return $profile;
 	}
 	/* End ophalen profiel */
+
+	/* Bewerk profiel */
+	function editProfile($pic, $livesIn, $bio, $birth, $id) {
+		$updateFails = $this->conn->prepare("UPDATE profile SET pic = ?, lives_in = ?, bio = ?, birth = ? WHERE account_id = ?");
+		$updateFails->bind_param("ssssi", $pic, $livesIn, $bio, $birth, $id);
+		$updateFails->execute();
+		$updateFails->close();
+		return;
+	}
+	/* End bewerk profiel */
 }
 
 $account = new account($connect->conn);

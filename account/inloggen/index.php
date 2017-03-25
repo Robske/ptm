@@ -38,7 +38,8 @@ if (isset($_POST["name"]) && isset($_POST["pass"])) {
 			<form action="" method="POST" id="logon">
 				<div class="form-group text-center">
 					<label for="username">Gebruikersnaam</label>
-					<input type="text" class="form-control text-center" name="name" id="username" minlength="2" maxlength="25" required>
+					<input type="text" class="form-control text-center" name="name" id="username" minlength="2" maxlength="25" 
+					<?php if(isset($_POST["name"])) { echo "value='" . $_POST["name"] . "'"; } ?>required>
 					<label for="password">Wachtwoord</label>
 					<input type="password" class="form-control text-center" name="pass" id="password" required>
 					<button type="submit" class="btn btn-login" form="logon">Inloggen</button>
