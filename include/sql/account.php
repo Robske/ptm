@@ -47,7 +47,7 @@ class account {
 			<?php
 			return;
 		} else {
-			$password = password_hash($pass, PASSWORD_BCRYPT, ["cost" => 10]);
+			$password = password_hash($pass, PASSWORD_BCRYPT, ["cost" => 15]);
 			$createUser = $this->conn->prepare("INSERT INTO users (name, username, password) VALUES (?, ?, ?)");
 			$createUser->bind_param("sss", ucwords($name), $username, $password);
 
