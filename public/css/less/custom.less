@@ -13,12 +13,26 @@
 	font-size: 12px;
 }
 
-.lightblue {
+.lightblue, .lightblue:hover, .lightblue:focus {
 	color: #65657C;
 }
 
 .underline {
 	text-decoration: underline;
+}
+
+.noselect {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.text {
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .fixed {

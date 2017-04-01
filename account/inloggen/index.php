@@ -13,7 +13,7 @@ if (isset($_SESSION["access"]) && $_SESSION["access"] === true) {
 <head>
 
 <title>PTM | Inloggen</title>
-<?php require("../../include/header.php"); ?>
+<?php require("../../include/header.html"); ?>
 
 </head>
 <body>
@@ -28,7 +28,7 @@ if (isset($_POST["name"]) && isset($_POST["pass"])) {
 }
 ?>
 
-<?php require("../../include/htmlheader.php"); ?>
+<?php require("../../include/htmlheader.html"); ?>
 
 <!-- Login form -->
 <div class="container">
@@ -39,7 +39,8 @@ if (isset($_POST["name"]) && isset($_POST["pass"])) {
 				<div class="form-group text-center">
 					<label for="username">Gebruikersnaam</label>
 					<input type="text" class="form-control text-center" name="name" id="username" minlength="2" maxlength="25" 
-					<?php if(isset($_POST["name"])) { echo "value='" . $_POST["name"] . "'"; } ?>required>
+					<?php if(isset($_POST["name"])) { echo "value='" . $_POST["name"] . "'"; } ?> required>
+					
 					<label for="password">Wachtwoord</label>
 					<input type="password" class="form-control text-center" name="pass" id="password" required>
 					<button type="submit" class="btn btn-login" form="logon">Inloggen</button>

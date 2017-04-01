@@ -6,10 +6,11 @@ class account {
 
 	/* Registreren */
 	function register($name, $username, $pass) {
+		$nameSpaces = substr_count($name, " ");
 		$usernameSpaces = substr_count($username, " ");
 		$passSpaces = substr_count($pass, " ");
 
-		if (strlen($name) < 2 || 
+		if (strlen($name) - $nameSpaces < 2 || 
 			$usernameSpaces >= 1 || strlen($username) < 6 ||
 			$passSpaces >= 1 || strlen($pass) < 9) {
 			?>
@@ -17,7 +18,7 @@ class account {
 				<div class="col-xs-12 col-md-6 col-md-offset-3">
 					<div class="alert alert-danger text-center">
 						<strong>Vul alle gegevens correct in!</strong>
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					</div>
 				</div>
 			</div>
@@ -40,7 +41,7 @@ class account {
 				<div class="col-xs-12 col-md-6 col-md-offset-3">
 					<div class="alert alert-danger text-center">
 						<strong>Gebruikersnaam <?php echo $username; ?> is in gebruik</strong>
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					</div>
 				</div>
 			</div>
@@ -57,7 +58,7 @@ class account {
 					<div class="col-xs-12 col-md-6 col-md-offset-3">
 						<div class="alert alert-success text-center">
 							<strong>Account aangemaakt</strong> Je kunt nu inloggen
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						</div>
 					</div>
 				</div>
@@ -70,7 +71,7 @@ class account {
 					<div class="col-xs-12 col-md-6 col-md-offset-3">
 						<div class="alert alert-danger text-center">
 							<strong>Registreren mislukt</strong>
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						</div>
 					</div>
 				</div>
@@ -83,7 +84,7 @@ class account {
 	}
 	/* End Registreren */
 
-	/* Inloggen */
+	/* Log on */
 	function logon($username, $pass) {
 		$getUser = $this->conn->prepare("SELECT id, name, username, password, blocked_until, login_fails FROM users WHERE username = ? AND inactive = 0;");
 		$getUser->bind_param("s", $username);
@@ -101,7 +102,7 @@ class account {
 				<div class="col-xs-12 col-md-6 col-md-offset-3">
 					<div class="alert alert-danger text-center">
 						<strong>Account geblokkeerd</strong> Je kunt weer inloggen om <b><?php echo $blockedUntil; ?></b>.
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					</div>
 				</div>
 			</div>
@@ -152,7 +153,7 @@ class account {
 						<div class="col-xs-12 col-md-6 col-md-offset-3">
 							<div class="alert alert-danger text-center">
 								<strong>Inloggen mislukt</strong>
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							</div>
 						</div>
 					</div>
@@ -166,7 +167,7 @@ class account {
 				<div class="col-xs-12 col-md-6 col-md-offset-3">
 					<div class="alert alert-danger text-center">
 						<strong>Naam is niet bekend</strong>
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					</div>
 				</div>
 			</div>
@@ -174,33 +175,7 @@ class account {
 			return;
 		}
 	}
-	/* End Inloggen */
-
-	/* Ophalen profiel */
-	function getProfile($id) {
-		
-		$getProfile = $this->conn->prepare("SELECT pic, lives_in, bio, birth FROM profile WHERE account_id = ?");
-		$getProfile->bind_param("i", $id);
-		$getProfile->execute();
-		$getProfile->bind_result($pic, $livesIn, $bio, $birth);
-		$getProfile->fetch();
-		$getProfile->close();
-
-		$profile = array("pic" => $pic, "livesIn" => $livesIn, "bio" => $bio, "birth" => $birth);
-
-		return $profile;
-	}
-	/* End ophalen profiel */
-
-	/* Bewerk profiel */
-	function editProfile($pic, $livesIn, $bio, $birth, $id) {
-		$updateFails = $this->conn->prepare("UPDATE profile SET pic = ?, lives_in = ?, bio = ?, birth = ? WHERE account_id = ?");
-		$updateFails->bind_param("ssssi", $pic, $livesIn, $bio, $birth, $id);
-		$updateFails->execute();
-		$updateFails->close();
-		return;
-	}
-	/* End bewerk profiel */
+	/* End Logon */
 }
 
 $account = new account($connect->conn);

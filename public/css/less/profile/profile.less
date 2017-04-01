@@ -10,6 +10,13 @@
 	-o-transition: border-color .5s ease;
 	transition: border-color .5s ease;
 
+	.btn {
+		background-color: transparent;
+		font-weight: 600;
+		font-size: 16px;
+		margin-top: 5px;
+	}
+
 	.edit {
 		color: #65657C;
 		margin-top: 15px;
@@ -24,7 +31,7 @@
 
 	.remove {
 		color: darkred;
-		margin-top: 20px;
+		margin-top: 15px;
 		font-weight: 600;
 		font-size: 16px;
 	}
@@ -35,12 +42,28 @@
 	}
 
 	.pic {
-		margin-top: 20px;
+		margin-top: 25px;
 		max-height: 190px;
-		border: 2px solid #343454;
+		border: 2px solid;
+		border-color: #343454;
 		border-radius: 10px;
+		-webkit-transition: border-color .5s ease;
+		-moz-transition: border-color .5s ease;
+		-o-transition: border-color .5s ease;
+		transition: border-color .5s ease;
 	}
 
+	.pic:hover, .pic:focus {
+		border-color: #8A8A9E;
+	}
+
+	#current-pic, #new-pic-output {
+		margin-top: 0;
+	}
+
+	#birth {
+		padding-left: 60px;
+	}
 	textarea {
 		color: #fff;
 		background-color: #8A8A9E !important;
@@ -66,5 +89,5 @@
 	.profile {
 		margin-left: auto;
 		margin-right: auto;
-	}	
+	}
 }
